@@ -1,0 +1,63 @@
+apps:
+
+  home-server:
+    user: jitsimeet
+    command: bin/service.home-server.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    start-timeout: 600s
+    restart-condition: always
+
+  mariadb:
+    user: jitsimeet
+    command: bin/service.mariadb.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+
+  redis:
+    user: jitsimeet
+    daemon: simple
+    command: bin/service.redis.sh
+    restart-condition: always
+
+  nginx:
+    user: jitsimeet
+    command: bin/service.nginx.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    start-timeout: 600s
+
+  cli:
+    command: bin/cli
+
+  sql:
+    command: bin/sql.sh
+
+  storage-change:
+    command: bin/cli storage-change
+
+  access-change:
+    command: bin/cli access-change
+
+  backup-pre-stop:
+    command: bin/cli backup-pre-stop
+
+  restore-pre-start:
+    command: bin/cli restore-pre-start
+
+  restore-post-start:
+    command: bin/cli restore-post-start
+
+confinement: strict
+description: jitsimeet
+grade: stable
+name: jitsimeet
+summary: jitsimeet

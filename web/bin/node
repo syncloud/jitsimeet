@@ -1,0 +1,8 @@
+#!/bin/bash -e
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
+export PATH=$PATH:${DIR}/bin
+export NODE_ENV=production
+LIBS=$(echo ${DIR}/lib)
+LIBS=$LIBS:$(echo ${DIR}/usr/lib)
+LIBS=$LIBS:${DIR}/usr/local/lib
+exec ${DIR}/lib/ld-*.so.* --library-path $LIBS ${DIR}/usr/local/bin/node "$@"
