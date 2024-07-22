@@ -124,7 +124,7 @@ func (i *Installer) Upgrade() error {
 
 func (i *Installer) IsInstalled() bool {
 	_, err := os.Stat(i.installFile)
-	return os.IsExist(err)
+	return err == nil
 }
 
 func (i *Installer) PreRefresh() error {
