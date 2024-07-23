@@ -1,30 +1,4 @@
 apps:
-
-  home-server:
-    user: jitsimeet
-    command: bin/service.home-server.sh
-    daemon: simple
-    plugs:
-    - network
-    - network-bind
-    start-timeout: 600s
-    restart-condition: always
-
-  mariadb:
-    user: jitsimeet
-    command: bin/service.mariadb.sh
-    daemon: simple
-    plugs:
-    - network
-    - network-bind
-    restart-condition: always
-
-  redis:
-    user: jitsimeet
-    daemon: simple
-    command: bin/service.redis.sh
-    restart-condition: always
-
   nginx:
     user: jitsimeet
     command: bin/service.nginx.sh

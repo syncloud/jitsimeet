@@ -39,18 +39,25 @@ local build(arch, test_ui, dind) = [{
         './nginx/test.sh',
       ],
     },
-         {
-            name: "web",
-            image: "jitsi/web:" + version,
-            commands: [
-                "./web/build.sh " + version
-            ]
-        },
-{
-      name: 'server test',
+     {
+        name: "web",
+        image: "jitsi/web:" + version,
+        commands: [
+            "./web/build.sh " + version
+        ]
+    },
+     {
+        name: "prosody",
+        image: "jitsi/prosody:" + version,
+        commands: [
+            "./prosody/build.sh " + version
+        ]
+    },
+    {
+      name: 'prosody test',
       image: 'syncloud/platform-buster-' + arch + ':' + platform,
       commands: [
-        './server/test.sh',
+        './prosody/test.sh',
       ],
     },
         {
