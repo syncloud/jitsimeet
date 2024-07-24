@@ -1,10 +1,7 @@
 package installer
 
 import (
-	"crypto/rand"
-	"encoding/hex"
 	"fmt"
-	"github.com/google/uuid"
 	cp "github.com/otiai10/copy"
 	"github.com/syncloud/golib/config"
 	"github.com/syncloud/golib/linux"
@@ -17,17 +14,12 @@ import (
 const App = "jitsimeet"
 
 type Variables struct {
-	App                 string
-	AppDir              string
-	DataDir             string
-	CommonDir           string
-	AuthJwtSecret       string
-	JwtSecret           string
-	EncryptionServerKey string
-	PseudoKeyParamsKey  string
-	ValetTokenSecret    string
-	AppUrl              string
-	Domain              string
+	App       string
+	AppDir    string
+	DataDir   string
+	CommonDir string
+	AppUrl    string
+	Domain    string
 }
 
 type Installer struct {
@@ -155,9 +147,8 @@ func (i *Installer) StorageChange() error {
 		return err
 	}
 
-	err = i.createMissingDirs(
-		path.Join(i.dataDir, "nginx"),
-		path.Join(storageDir, "uploads"),
+	err = linux.CreateMissingDirs(
+		path.Join(storageDir, "data"),
 	)
 	if err != nil {
 		return err
@@ -184,14 +175,6 @@ func (i *Installer) UpdateVersion() error {
 }
 
 func (i *Installer) UpdateConfigs() error {
-	encryptionServerKey, err := randomHex(32)
-	if err != nil {
-		return err
-	}
-	valetTokenSecret, err := randomHex(32)
-	if err != nil {
-		return err
-	}
 	appUrl, err := i.platformClient.GetAppUrl(App)
 	if err != nil {
 		return err
@@ -203,17 +186,12 @@ func (i *Installer) UpdateConfigs() error {
 	}
 
 	variables := Variables{
-		App:                 App,
-		AppDir:              i.appDir,
-		DataDir:             i.dataDir,
-		CommonDir:           i.commonDir,
-		AuthJwtSecret:       uuid.New().String(),
-		JwtSecret:           uuid.New().String(),
-		EncryptionServerKey: encryptionServerKey,
-		PseudoKeyParamsKey:  uuid.New().String(),
-		ValetTokenSecret:    valetTokenSecret,
-		AppUrl:              appUrl,
-		Domain:              domain,
+		App:       App,
+		AppDir:    i.appDir,
+		DataDir:   i.dataDir,
+		CommonDir: i.commonDir,
+		AppUrl:    appUrl,
+		Domain:    domain,
 	}
 
 	err = config.Generate(
@@ -259,34 +237,4 @@ func (i *Installer) FixPermissions() error {
 		return err
 	}
 	return nil
-}
-
-func (i *Installer) createMissingDirs(dirs ...string) error {
-	for _, dir := range dirs {
-		err := createMissingDir(dir)
-		if err != nil {
-			i.logger.Error("cannot create dir", zap.String("dir", dir), zap.Error(err))
-			return err
-		}
-	}
-	return nil
-}
-
-func createMissingDir(dir string) error {
-	_, err := os.Stat(dir)
-	if os.IsNotExist(err) {
-		err = os.Mkdir(dir, 0755)
-		if err != nil {
-			return err
-		}
-	}
-	return nil
-}
-
-func randomHex(n int) (string, error) {
-	bytes := make([]byte, n)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", err
-	}
-	return hex.EncodeToString(bytes), nil
 }

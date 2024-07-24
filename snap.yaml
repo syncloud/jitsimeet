@@ -9,11 +9,28 @@ apps:
     restart-condition: always
     start-timeout: 600s
 
+  prosody:
+    user: jitsimeet
+    command: bin/service.prosody.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    start-timeout: 600s
+
+  saslauthd:
+    user: jitsimeet
+    command: bin/service.saslauthd.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    start-timeout: 600s
+
   cli:
     command: bin/cli
-
-  sql:
-    command: bin/sql.sh
 
   storage-change:
     command: bin/cli storage-change
