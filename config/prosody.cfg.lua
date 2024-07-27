@@ -119,7 +119,7 @@ gc = {
 }
 
 
-pidfile = "{{ .DataDir }/data/prosody.pid";
+pidfile = "{{ .DataDir }}/data/prosody.pid";
 
 -- Force clients to use encrypted connections? This option will
 -- prevent clients from authenticating unless they are using encryption.
