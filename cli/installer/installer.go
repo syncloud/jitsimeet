@@ -97,6 +97,15 @@ func (i *Installer) Initialize() error {
 		return err
 	}
 
+	//prosodyctl --config $PROSODY_CFG register focus $XMPP_AUTH_DOMAIN $JICOFO_AUTH_PASSWORD
+	//prosodyctl --config $PROSODY_CFG mod_roster_command subscribe focus.$XMPP_DOMAIN focus@$XMPP_AUTH_DOMAIN
+	//prosodyctl --config $PROSODY_CFG register $JVB_AUTH_USER $XMPP_AUTH_DOMAIN $JVB_AUTH_PASSWORD
+	//prosodyctl --config $PROSODY_CFG register $JIBRI_XMPP_USER $XMPP_AUTH_DOMAIN $JIBRI_XMPP_PASSWORD
+	//prosodyctl --config $PROSODY_CFG register $JIBRI_RECORDER_USER $XMPP_RECORDER_DOMAIN $JIBRI_RECORDER_PASSWORD
+	//prosodyctl --config $PROSODY_CFG register $JIGASI_XMPP_USER $XMPP_AUTH_DOMAIN $JIGASI_XMPP_PASSWORD
+	//echo | prosodyctl --config $PROSODY_CFG cert generate $XMPP_DOMAIN
+	//echo | prosodyctl --config $PROSODY_CFG cert generate $XMPP_AUTH_DOMAIN
+
 	err = os.WriteFile(i.installFile, []byte("installed"), 0644)
 	if err != nil {
 		return err
@@ -150,6 +159,7 @@ func (i *Installer) StorageChange() error {
 	err = linux.CreateMissingDirs(
 		path.Join(i.dataDir, "nginx"),
 		path.Join(storageDir, "data"),
+		path.Join(storageDir, "certs"),
 	)
 	if err != nil {
 		return err
