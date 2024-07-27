@@ -29,8 +29,8 @@ VirtualHost "{{ .Domain }}"
     authentication = "jitsi-anonymous"
 
     ssl = {
-        key = "{{ .DataDir }/data/{{ .Domain }}.key";
-        certificate = "{{ .DataDir }/data/{{ .Domain }}.crt";
+        key = "{{ .DataDir }}/data/{{ .Domain }}.key";
+        certificate = "{{ .DataDir }}/data/{{ .Domain }}.crt";
     }
     modules_enabled = {
         "bosh";
@@ -92,8 +92,8 @@ VirtualHost "{{ .Domain }}"
 
 VirtualHost "auth.{{ .Domain }}"
     ssl = {
-        key = "{{ .DataDir }/data/auth.{{ .Domain }}.key";
-        certificate = "{{ .DataDir }/data/auth.{{ .Domain }}.crt";
+        key = "{{ .DataDir }}/data/auth.{{ .Domain }}.key";
+        certificate = "{{ .DataDir }}/data/auth.{{ .Domain }}.crt";
     }
     modules_enabled = {
         "limits_exception";
