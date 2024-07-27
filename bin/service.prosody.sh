@@ -1,6 +1,8 @@
 #!/bin/bash -e
 /bin/rm -f $SNAP_DATA/prosody.socket
-export LUA_PATH="$SNAP/prosody/usr/share/lua/5.4/?.lua"
+LUA="5.4"
+export LUA_PATH="$SNAP/prosody/usr/share/lua/$LUA/?.lua;$SNAP/prosody/usr/local/share/lua/$LUA/?.lua"
 LIBS=$(echo $SNAP/prosody/usr/lib/*-linux-gnu*)
-export LUA_CPATH="$LIBS/lua/5.2/?.so"
+export LUA_CPATH="$LIBS/lua/$LUA/?.so"
+export LUA_CPATH="$LUA_CPATH;$SNAP/prosody/usr/local/lib/lua/$LUA/?.so"
 exec $SNAP/prosody/bin/lua $SNAP/prosody/usr/bin/prosody --config $SNAP_DATA/config/prosody.cfg.lua -F
