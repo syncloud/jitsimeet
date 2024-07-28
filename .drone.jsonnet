@@ -60,6 +60,20 @@ local build(arch, test_ui, dind) = [{
         './prosody/test.sh',
       ],
     },
+     {
+        name: "jicofo",
+        image: "jitsi/jicofo:" + version,
+        commands: [
+            "./jicofo/build.sh " + version
+        ]
+    },
+    {
+      name: 'jicofo test',
+      image: 'syncloud/platform-buster-' + arch + ':' + platform,
+      commands: [
+        './jicofo/test.sh',
+      ],
+    },
         {
             name: "cli",
             image: "golang:1.20",

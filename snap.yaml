@@ -29,6 +29,16 @@ apps:
     restart-condition: always
     start-timeout: 600s
 
+  jicofo:
+    user: jitsimeet
+    command: bin/service.jicofo.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    start-timeout: 600s
+
   cli:
     command: bin/cli
 
