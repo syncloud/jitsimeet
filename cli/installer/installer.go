@@ -158,8 +158,8 @@ func (i *Installer) StorageChange() error {
 
 	err = linux.CreateMissingDirs(
 		path.Join(i.dataDir, "nginx"),
-		path.Join(storageDir, "data"),
-		path.Join(storageDir, "certs"),
+		path.Join(i.dataDir, "data"),
+		path.Join(i.dataDir, "config/certs"),
 	)
 	if err != nil {
 		return err
