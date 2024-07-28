@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash -xe
 /bin/rm -f $SNAP_DATA/prosody.socket
 LUA="5.4"
 export LUA_PATH="$SNAP/prosody/usr/share/lua/$LUA/?.lua"
