@@ -1,3 +1,4 @@
 #!/bin/bash -e
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && cd .. && pwd )
-exec $DIR/usr/lib/jvm/java-17-openjdk-amd64/bin/java "$@"
+LIBS=$(echo ${DIR}/lib/*-linux-gnu*)
+exec ${DIR}/lib/*-linux*/ld-*.so.* --library-path $LIBS $DIR/usr/lib/jvm/java-17-openjdk-amd64/bin/java "$@"
