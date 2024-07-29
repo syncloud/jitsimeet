@@ -8,5 +8,5 @@ exec $SNAP/jicofo/bin/java.sh \
   -Djdk.tls.ephemeralDHKeySize=2048 \
   -Djava.util.logging.config.file=$SNAP_DATA/config/jicofo.log.properties \
   -Dconfig.file=$SNAP_DATA/config/jicofo.conf \
-  -cp $(JARS=($SNAP/jocofo/jicofo*.jar $SNAP/jocofo/lib/*.jar); IFS=:; echo "${JARS[*]}") \
+  -cp $(JARS=($SNAP/jicofo/jicofo*.jar $SNAP/jicofo/lib/*.jar); IFS=:; echo "${JARS[*]}") \
   org.jitsi.jicofo.Main "$@"
