@@ -27,7 +27,7 @@ local build(arch, test_ui, dind) = [{
         },
       {
          name: "jvb",
-         image: "jvb/jvb:" + version,
+         image: "jitsi/jvb:" + version,
          commands: [
              "./jvb/build.sh " + version
          ]
