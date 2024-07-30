@@ -39,6 +39,16 @@ apps:
     restart-condition: always
     start-timeout: 600s
 
+  jvb:
+    user: jitsimeet
+    command: bin/service.jvb.sh
+    daemon: simple
+    plugs:
+    - network
+    - network-bind
+    restart-condition: always
+    start-timeout: 600s
+
   cli:
     command: bin/cli
 

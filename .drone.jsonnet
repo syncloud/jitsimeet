@@ -25,6 +25,20 @@ local build(arch, test_ui, dind) = [{
                 "echo $DRONE_BUILD_NUMBER > version"
             ]
         },
+      {
+         name: "jvb",
+         image: "jvb/jvb:" + version,
+         commands: [
+             "./jvb/build.sh " + version
+         ]
+     },
+     {
+       name: 'jvb test',
+       image: 'syncloud/platform-buster-' + arch + ':' + platform,
+       commands: [
+         './jvb/test.sh',
+       ],
+     },
  {
       name: 'nginx',
       image: 'nginx:' + nginx,
