@@ -3,20 +3,12 @@ var config = {};
 
 config.hosts = {};
 
-config.hosts.domain = 'meet.jitsi';
+config.hosts.domain = '{{ .Domain }}';
 config.focusUserJid = 'focus@auth.meet.jitsi';
 
-var subdir = '<!--# echo var="subdir" default="" -->';
-var subdomain = '<!--# echo var="subdomain" default="" -->';
-if (subdir.startsWith('<!--')) {
-    subdir = '';
-}
-if (subdomain) {
-    subdomain = subdomain.substring(0,subdomain.length-1).split('.').join('_').toLowerCase() + '.';
-}
-config.hosts.muc = 'muc.' + subdomain + 'meet.jitsi';
-config.bosh = 'https://{{ .Domain }}/' + subdir + 'http-bind';
-config.websocket = 'wss://{{ .Domain }}/' + subdir + 'xmpp-websocket';
+config.hosts.muc = 'muc.meet.jitsi';
+config.bosh = 'https://{{ .Domain }}/http-bind';
+config.websocket = 'wss://{{ .Domain }}/xmpp-websocket';
 config.bridgeChannel = {
     preferSctp: true
 };
