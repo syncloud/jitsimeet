@@ -15,4 +15,7 @@ rm -rf $BUILD_DIR/$JAVA_DIR/lib
 rm -rf $JAVA_DIR/lib/src.zip
 cp -r --dereference $JAVA_DIR/lib $BUILD_DIR/$JAVA_DIR
 
+mv $BUILD_DIR/$JAVA_DIR/lib/jspawnhelper $BUILD_DIR/$JAVA_DIR/lib/jspawnhelper.bin
+cp $DIR/bin/jspawnhelper $BUILD_DIR/$JAVA_DIR/lib
+
 cp --remove-destination ${DIR}/bin/* ${BUILD_DIR}/bin
