@@ -33,7 +33,7 @@ modules_enabled = {
 	-- Generally required
 		"roster"; -- Allow users to have a roster. Recommended ;)
 		"saslauth"; -- Authentication for clients and servers. Recommended if you want to log in.
-		"tls"; -- Add support for secure TLS on c2s/s2s connections
+		--"tls"; -- Add support for secure TLS on c2s/s2s connections
 		"disco"; -- Service discovery
 
 	-- Not essential, but recommended
@@ -124,7 +124,7 @@ pidfile = "{{ .DataDir }}/data/prosody.pid";
 -- Force clients to use encrypted connections? This option will
 -- prevent clients from authenticating unless they are using encryption.
 
-c2s_require_encryption = true;
+c2s_require_encryption = false;
 
 -- set c2s port
 c2s_ports = { 5222 } -- Listen on specific c2s port

@@ -34,10 +34,10 @@ VirtualHost "{{ .Domain }}"
     cyrus_application_name = "xmpp"
     allow_unencrypted_plain_auth = true
 
-    ssl = {
-        key = "/var/snap/platform/current/syncloud.key";
-        certificate = "/var/snap/platform/current/syncloud.crt";
-    }
+    --ssl = {
+    --    key = "/var/snap/platform/current/syncloud.key";
+    --    certificate = "/var/snap/platform/current/syncloud.crt";
+    --}
     modules_enabled = {
         "bosh";
         "websocket";
@@ -63,14 +63,15 @@ VirtualHost "{{ .Domain }}"
     c2s_require_encryption = true
 
 VirtualHost "auth.{{ .Domain }}"
-    ssl = {
-        key = "/var/snap/platform/current/syncloud.key";
-        certificate = "/var/snap/platform/current/syncloud.crt";
-    }
+    --ssl = {
+    --    key = "/var/snap/platform/current/syncloud.key";
+    --    certificate = "/var/snap/platform/current/syncloud.crt";
+    --}
     modules_enabled = {
         "limits_exception";
     }
-    authentication = "internal_hashed"
+    --authentication = "internal_hashed"
+    authentication = "anonymous"
 
 
 
