@@ -180,7 +180,8 @@ authentication = "internal_hashed"
 --  Logs info and higher to /var/log
 --  Logs errors to syslog also
 log = {
-	{ levels = {min = "info"}, to = "console"};
+	--{ levels = {min = "info"}, to = "console"};
+	"*console";
 }
 
 -- Enable use of native prosody 0.11 support for epoll over select
