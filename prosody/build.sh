@@ -27,7 +27,8 @@ cd cyrus-sasl-2.1.28
   --enable-plain \
   --with-configdir=/snap/jitsimeet/current/config/sasl2 \
   --with-plugindir=/snap/jitsimeet/current/prosody/sasl2
-
+make
+make install
 cp -r /snap/jitsimeet/current/prosody/sasl2 ${BUILD_DIR}
 
 #apt install -y gcc luarocks libldap2-dev
