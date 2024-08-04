@@ -63,17 +63,16 @@ def test_index(app_domain):
     assert response.status_code == 200, response.text
 
 
+# def test_sasl_auth(device, device_user, device_password):
+#     device.run_ssh(f"/snap/jitsimeet/current/prosody/bin/testsaslauthd -f /var/snap/jitsimeet/current/saslauthd/mux -u {device_user} -p {device_password}")
+
+
 def test_storage_change_event(device):
     device.run_ssh('snap run jitsimeet.storage-change > {0}/storage-change.log'.format(TMP_DIR))
 
 
 def test_access_change_event(device):
     device.run_ssh('snap run jitsimeet.access-change > {0}/access-change.log'.format(TMP_DIR))
-
-
-#def test_api(app_domain):
-#    response = requests.get('https://{0}/api/'.format(app_domain), verify=False)
-#    assert response.status_code == 200, response.text
 
 
 def test_upgrade(app_archive_path, domain, device_password):

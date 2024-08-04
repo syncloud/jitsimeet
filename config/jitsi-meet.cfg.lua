@@ -32,6 +32,15 @@ VirtualHost "{{ .Domain }}"
 
     authentication = "cyrus"
     cyrus_application_name = "xmpp"
+    cyrus_server_fqdn = "{{ .DataDir }}/saslauthd/mux"
+
+    --authentication = "ldap"
+    --ldap_server = "localhost:389"
+    --ldap_rootdn = "cn=admin,dc=syncloud,dc=org"
+    --ldap_password = "syncloud"
+    --ldap_filter = "(cn=$user)"
+    --ldap_mode = "bind"
+
     allow_unencrypted_plain_auth = true
 
     --ssl = {
@@ -50,6 +59,7 @@ VirtualHost "{{ .Domain }}"
         "muc_breakout_rooms";
         "av_moderation";
         "auth_cyrus";
+        --"auth_ldap";
     }
 
     main_muc = "muc.{{ .Domain }}"
