@@ -40,4 +40,7 @@ def test_index(selenium):
 def test_meeting(selenium):
     selenium.find_by(By.ID, "enter_room_field").send_keys('test-meeting')
     selenium.click_by(By.XPATH, "//button[.='Start meeting']")
-    selenium.find_by(By.XPATH, "//div[contains(.,'Join meeting')]")
+    selenium.screenshot('join')
+    selenium.find_by(By.ID, "premeeting-name-input").send_keys('test-user')
+    selenium.click_by(By.XPATH, "//div[contains(.,'Join meeting')]")
+    selenium.screenshot('meeting')
