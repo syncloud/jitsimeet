@@ -21,4 +21,5 @@ def test_meeting(selenium):
     selenium.screenshot('join')
     selenium.find_by(By.ID, "premeeting-name-input").send_keys('test-user')
     selenium.click_by(By.XPATH, "//div[contains(.,'Join meeting')]")
+    selenium.find_by(By.XPATH, "//div[contains(@class, 'audio-preview')]")
     selenium.screenshot('meeting')
