@@ -5,6 +5,8 @@ import pytest
 from selenium.webdriver.common.by import By
 from syncloudlib.integration.hosts import add_host_alias
 
+from test import lib
+
 DIR = dirname(__file__)
 
 
@@ -38,9 +40,4 @@ def test_index(selenium):
 
 
 def test_meeting(selenium):
-    selenium.find_by(By.ID, "enter_room_field").send_keys('test-meeting')
-    selenium.click_by(By.XPATH, "//button[.='Start meeting']")
-    selenium.screenshot('join')
-    selenium.find_by(By.ID, "premeeting-name-input").send_keys('test-user')
-    selenium.click_by(By.XPATH, "//div[contains(.,'Join meeting')]")
-    selenium.screenshot('meeting')
+    lib.test_meeting(selenium)

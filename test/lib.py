@@ -1,5 +1,6 @@
 from selenium.webdriver.common.by import By
 
+
 def login(selenium, ui_mode):
     selenium.click_by(By.XPATH, "//button[text()='Sign in']")
 
@@ -13,3 +14,11 @@ def login(selenium, ui_mode):
     selenium.screenshot('test-2')
     #selenium.find_by(By.XPATH, "//div[contains(text(), 'signed in as')]")
 
+
+def test_meeting(selenium):
+    selenium.find_by(By.ID, "enter_room_field").send_keys('test-meeting')
+    selenium.click_by(By.XPATH, "//button[.='Start meeting']")
+    selenium.screenshot('join')
+    selenium.find_by(By.ID, "premeeting-name-input").send_keys('test-user')
+    selenium.click_by(By.XPATH, "//div[contains(.,'Join meeting')]")
+    selenium.screenshot('meeting')
