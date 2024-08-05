@@ -22,14 +22,18 @@ apt install -y build-essential
 wget https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-2.1.28/cyrus-sasl-2.1.28.tar.gz
 tar xf cyrus-sasl-2.1.28.tar.gz
 cd cyrus-sasl-2.1.28
+
+PREFIX=/snap/jitsimeet/current/prosody/sasl2
 ./configure \
-  --prefix=${BUILD_DIR}/prosody/usr \
+  --prefix=$PREFIX \
   --enable-plain \
   --with-configdir=/snap/jitsimeet/current/config/sasl2 \
-  --with-plugindir=/snap/jitsimeet/current/prosody/sasl2
+  --with-plugindir=$PREFIX/plugins
 make
 make install
-cp -r /snap/jitsimeet/current/prosody/sasl2 ${BUILD_DIR}
+cd $PREFIX/lib
+ln -s libsasl2.so.3.0.0 libsasl2.so.2
+cp -r $PREFIX ${BUILD_DIR}
 
 #apt install -y gcc luarocks libldap2-dev
 #luarocks install lualdap LDAP_DIR=/usr LDAP_DI=$(echo /usr/lib/*-linux-gnu*) LDAP_LIBDIR=$(echo /usr/lib/*-linux-gnu*)
