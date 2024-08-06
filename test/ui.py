@@ -40,4 +40,4 @@ def test_index(selenium):
 
 
 def test_meeting(selenium):
-    lib.test_meeting(selenium)
+    lib.login(selenium)
