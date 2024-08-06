@@ -39,5 +39,5 @@ def test_index(selenium):
     selenium.screenshot('index')
 
 
-def test_meeting(selenium):
-    lib.login(selenium)
+def test_meeting(selenium, device_user, device_password):
+    lib.login(selenium, device_user, device_password)
