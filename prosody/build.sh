@@ -28,6 +28,7 @@ cd cyrus-sasl-2.1.28
 PREFIX=/snap/jitsimeet/current/prosody/sasl2
 ./configure \
   --prefix=$PREFIX \
+  --with-saslauthd=/var/snap/jitsimeet/current/saslauthd \
   --enable-plain \
   --with-configdir=/snap/jitsimeet/current/config/sasl2 \
   --with-plugindir=$PREFIX/plugins
