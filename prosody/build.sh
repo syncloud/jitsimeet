@@ -17,6 +17,8 @@ sed -i "s#CFG_CONFIGDIR=.*;#CFG_CONFIGDIR='/var/snap/jitsimeet/current/config';#
 sed -i "s#CFG_PLUGINDIR=.*;#CFG_PLUGINDIR='/snap/jitsimeet/current/prosody/usr/lib/prosody/modules/';#g"  ${BUILD_DIR}/usr/bin/prosody
 sed -i "s#CFG_DATADIR=.*;#CFG_DATADIR='/var/snap/jitsimeet/current/data';#g"  ${BUILD_DIR}/usr/bin/prosody
 
+cp $DIR/sasl_cyrus.lua ${BUILD_DIR}/prosody-plugins
+
 apt update
 apt install -y build-essential
 wget https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-2.1.28/cyrus-sasl-2.1.28.tar.gz

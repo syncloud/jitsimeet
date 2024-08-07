@@ -63,8 +63,8 @@ def test_index(app_domain):
     assert response.status_code == 200, response.text
 
 
-# def test_sasl_auth(device, device_user, device_password):
-#     device.run_ssh(f"/snap/jitsimeet/current/prosody/bin/testsaslauthd -f /var/snap/jitsimeet/current/saslauthd/mux -u {device_user} -p {device_password}")
+def test_sasl_auth(device, device_user, device_password):
+    device.run_ssh(f"/snap/jitsimeet/current/prosody/bin/testsaslauthd -f /var/snap/jitsimeet/current/saslauthd/mux -u {device_user} -p {device_password}")
 
 
 def test_storage_change_event(device):
