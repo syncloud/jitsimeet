@@ -1,13 +1,13 @@
 admins = {
-    "jigasi@auth.{{ .Domain }}",
-    "jibri@auth.{{ .Domain }}",
-    "focus@auth.{{ .Domain }}",
-    "jvb@auth.{{ .Domain }}"
+    "jigasi@{{ .AuthDomain }}",
+    "jibri@{{ .AuthDomain }}",
+    "focus@{{ .AuthDomain }}",
+    "jvb@{{ .AuthDomain }}"
 }
 
 unlimited_jids = {
-    "focus@auth.{{ .Domain }}",
-    "jvb@auth.{{ .Domain }}"
+    "focus@{{ .AuthDomain }}",
+    "jvb@{{ .AuthDomain }}"
 }
 
 plugin_paths = {
@@ -72,7 +72,7 @@ VirtualHost "{{ .Domain }}"
     av_moderation_component = "avmoderation.{{ .Domain }}"
     c2s_require_encryption = true
 
-VirtualHost "auth.{{ .Domain }}"
+VirtualHost "{{ .AuthDomain }}"
     --ssl = {
     --    key = "/var/snap/platform/current/syncloud.key";
     --    certificate = "/var/snap/platform/current/syncloud.crt";
@@ -90,7 +90,7 @@ Component "internal-muc.{{ .Domain }}" "muc"
     modules_enabled = {
         }
     restrict_room_creation = true
-    muc_filter_whitelist="auth.{{ .Domain }}"
+    muc_filter_whitelist="{{ .AuthDomain }}"
     muc_room_locking = false
     muc_room_default_public_jids = true
     muc_room_cache_size = 1000
@@ -117,13 +117,13 @@ Component "muc.{{ .Domain }}" "muc"
     muc_room_default_public_jids = true
 
     muc_password_whitelist = {
-        "focus@auth.{{ .Domain }}";
+        "focus@{{ .AuthDomain }}";
     }
     muc_tombstones = false
     muc_room_allow_persistent = false
 
 Component "focus.{{ .Domain }}" "client_proxy"
-    target_address = "focus@auth.{{ .Domain }}"
+    target_address = "focus@{{ .AuthDomain }}"
 
 Component "speakerstats.{{ .Domain }}" "speakerstats_component"
     muc_component = "muc.{{ .Domain }}"

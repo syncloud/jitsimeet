@@ -2,24 +2,29 @@ package installer
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	cp "github.com/otiai10/copy"
 	"github.com/syncloud/golib/config"
 	"github.com/syncloud/golib/linux"
 	"github.com/syncloud/golib/platform"
 	"go.uber.org/zap"
 	"os"
+	"os/exec"
 	"path"
+	"strings"
 )
 
 const App = "jitsimeet"
 
 type Variables struct {
-	App       string
-	AppDir    string
-	DataDir   string
-	CommonDir string
-	AppUrl    string
-	Domain    string
+	App            string
+	AppDir         string
+	DataDir        string
+	CommonDir      string
+	AppUrl         string
+	Domain         string
+	AuthDomain     string
+	JicofoPassword string
 }
 
 type Installer struct {
@@ -31,6 +36,8 @@ type Installer struct {
 	appDir             string
 	dataDir            string
 	commonDir          string
+	prosodyCtl         string
+	jicofoPasswordFile string
 	logger             *zap.Logger
 }
 
@@ -38,7 +45,9 @@ func New(logger *zap.Logger) *Installer {
 	appDir := fmt.Sprintf("/snap/%s/current", App)
 	dataDir := fmt.Sprintf("/var/snap/%s/current", App)
 	commonDir := fmt.Sprintf("/var/snap/%s/common", App)
+	prosodyCtl := path.Join(appDir, "prosody/bin/prosodyctl.sh")
 	configDir := path.Join(dataDir, "config")
+	jicofoPasswordFile := path.Join(dataDir, "jicofo.password")
 	return &Installer{
 		newVersionFile:     path.Join(appDir, "version"),
 		currentVersionFile: path.Join(dataDir, "version"),
@@ -48,6 +57,8 @@ func New(logger *zap.Logger) *Installer {
 		appDir:             appDir,
 		dataDir:            dataDir,
 		commonDir:          commonDir,
+		prosodyCtl:         prosodyCtl,
+		jicofoPasswordFile: jicofoPasswordFile,
 		logger:             logger,
 	}
 }
@@ -97,7 +108,24 @@ func (i *Installer) Initialize() error {
 		return err
 	}
 
-	//prosodyctl --config $PROSODY_CFG register focus $XMPP_AUTH_DOMAIN $JICOFO_AUTH_PASSWORD
+	domain, err := i.platformClient.GetAppDomainName(App)
+	if err != nil {
+		return err
+	}
+
+	authDomain := AuthDomain(domain)
+	jicofoPassword, err := getOrCreateUuid(i.jicofoPasswordFile)
+	if err != nil {
+		return err
+	}
+
+	command := exec.Command(i.prosodyCtl, "register", "focus", authDomain, jicofoPassword)
+	output, err := command.CombinedOutput()
+	i.logger.Info("output", zap.String("cmd", strings.Replace(command.String(), jicofoPassword, "***", -1)), zap.String("output", string(output)))
+	if err != nil {
+		return err
+	}
+
 	//prosodyctl --config $PROSODY_CFG mod_roster_command subscribe focus.$XMPP_DOMAIN focus@$XMPP_AUTH_DOMAIN
 	//prosodyctl --config $PROSODY_CFG register $JVB_AUTH_USER $XMPP_AUTH_DOMAIN $JVB_AUTH_PASSWORD
 	//prosodyctl --config $PROSODY_CFG register $JIBRI_XMPP_USER $XMPP_AUTH_DOMAIN $JIBRI_XMPP_PASSWORD
@@ -196,13 +224,19 @@ func (i *Installer) UpdateConfigs() error {
 		return err
 	}
 
+	jicofoPassword, err := getOrCreateUuid(i.jicofoPasswordFile)
+	if err != nil {
+		return err
+	}
+
 	variables := Variables{
-		App:       App,
-		AppDir:    i.appDir,
-		DataDir:   i.dataDir,
-		CommonDir: i.commonDir,
-		AppUrl:    appUrl,
-		Domain:    domain,
+		App:            App,
+		AppDir:         i.appDir,
+		DataDir:        i.dataDir,
+		CommonDir:      i.commonDir,
+		AppUrl:         appUrl,
+		Domain:         domain,
+		JicofoPassword: jicofoPassword,
 	}
 
 	err = config.Generate(
@@ -248,4 +282,22 @@ func (i *Installer) FixPermissions() error {
 		return err
 	}
 	return nil
+}
+
+func getOrCreateUuid(file string) (string, error) {
+	_, err := os.Stat(file)
+	if os.IsNotExist(err) {
+		secret := uuid.New().String()
+		err = os.WriteFile(file, []byte(secret), 0644)
+		return secret, err
+	}
+	content, err := os.ReadFile(file)
+	if err != nil {
+		return "", err
+	}
+	return string(content), nil
+}
+
+func AuthDomain(domain string) string {
+	return fmt.Sprint("auth.", domain)
 }

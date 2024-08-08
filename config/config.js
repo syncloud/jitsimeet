@@ -4,7 +4,7 @@ var config = {};
 config.hosts = {};
 
 config.hosts.domain = '{{ .Domain }}';
-config.focusUserJid = 'focus@auth.meet.jitsi';
+config.focusUserJid = 'focus@{{ .AuthDomain }}';
 
 config.hosts.muc = 'muc.meet.jitsi';
 config.bosh = 'https://{{ .Domain }}/http-bind';
