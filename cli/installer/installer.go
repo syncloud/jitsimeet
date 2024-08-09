@@ -9,7 +9,9 @@ import (
 	"github.com/syncloud/golib/platform"
 	"go.uber.org/zap"
 	"os"
+	"os/exec"
 	"path"
+	"strings"
 )
 
 const App = "jitsimeet"
@@ -106,23 +108,23 @@ func (i *Installer) Initialize() error {
 		return err
 	}
 
-	//domain, err := i.platformClient.GetAppDomainName(App)
-	//if err != nil {
-	//	return err
-	//}
+	domain, err := i.platformClient.GetAppDomainName(App)
+	if err != nil {
+		return err
+	}
 
-	//authDomain := AuthDomain(domain)
-	//jicofoPassword, err := getOrCreateUuid(i.jicofoPasswordFile)
-	//if err != nil {
-	//	return err
-	//}
+	authDomain := AuthDomain(domain)
+	jicofoPassword, err := getOrCreateUuid(i.jicofoPasswordFile)
+	if err != nil {
+		return err
+	}
 
-	//command := exec.Command(i.prosodyCtl, "register", "focus", authDomain, jicofoPassword)
-	//output, err := command.CombinedOutput()
-	//i.logger.Info("output", zap.String("cmd", strings.Replace(command.String(), jicofoPassword, "***", -1)), zap.String("output", string(output)))
-	//if err != nil {
-	//	return err
-	//}
+	command := exec.Command(i.prosodyCtl, "register", "focus", authDomain, jicofoPassword)
+	output, err := command.CombinedOutput()
+	i.logger.Info("output", zap.String("cmd", strings.Replace(command.String(), jicofoPassword, "***", -1)), zap.String("output", string(output)))
+	if err != nil {
+		return err
+	}
 
 	//prosodyctl --config $PROSODY_CFG mod_roster_command subscribe focus.$XMPP_DOMAIN focus@$XMPP_AUTH_DOMAIN
 	//prosodyctl --config $PROSODY_CFG register $JVB_AUTH_USER $XMPP_AUTH_DOMAIN $JVB_AUTH_PASSWORD
@@ -234,6 +236,7 @@ func (i *Installer) UpdateConfigs() error {
 		CommonDir:      i.commonDir,
 		AppUrl:         appUrl,
 		Domain:         domain,
+		AuthDomain:     AuthDomain(domain),
 		JicofoPassword: jicofoPassword,
 	}
 
