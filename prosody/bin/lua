@@ -11,6 +11,6 @@ export LUA_PATH="$LUA_PATH;$DIR/usr/local/share/lua/$LUA/?.lua"
 export LUA_PATH="$LUA_PATH;$DIR/usr/lib/prosody/modules/?.lua"
 #LIBS=$(echo $SNAP/prosody/usr/lib/*-linux-gnu*)
 export LUA_CPATH="$USR_LIBS/lua/$LUA/?.so"
-export LUA_CPATH="$LUA_CPATH;$SNAP/prosody/usr/local/lib/lua/$LUA/?.so"
+export LUA_CPATH="$LUA_CPATH;$DIR/usr/local/lib/lua/$LUA/?.so"
 
-${DIR}/lib/*-linux*/ld-*.so.* --library-path $LIBS ${DIR}/usr/bin/lua5.4 "$@"
+${DIR}/lib/*-linux*/ld-*.so.* --library-path $LIBS ${DIR}/usr/bin/lua$LUA "$@"
