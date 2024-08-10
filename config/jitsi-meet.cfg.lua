@@ -80,8 +80,8 @@ VirtualHost "{{ .AuthDomain }}"
     modules_enabled = {
         "limits_exception";
     }
-    --authentication = "internal_hashed"
-    authentication = "anonymous"
+    authentication = "internal_hashed"
+    --authentication = "anonymous"
 
 
 
