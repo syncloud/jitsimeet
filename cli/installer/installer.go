@@ -98,7 +98,10 @@ func (i *Installer) Configure() error {
 			return err
 		}
 	}
-
+	err := i.FixPermissions()
+	if err != nil {
+		return err
+	}
 	return i.UpdateVersion()
 }
 
@@ -188,12 +191,7 @@ func (i *Installer) PostRefresh() error {
 }
 
 func (i *Installer) StorageChange() error {
-	storageDir, err := i.platformClient.InitStorage(App, App)
-	if err != nil {
-		return err
-	}
-
-	err = linux.CreateMissingDirs(
+	err := linux.CreateMissingDirs(
 		path.Join(i.dataDir, "nginx"),
 		path.Join(i.dataDir, "data"),
 		path.Join(i.dataDir, "config/certs"),
@@ -202,15 +200,11 @@ func (i *Installer) StorageChange() error {
 		return err
 	}
 
-	err = linux.Chown(i.dataDir, App)
+	err = i.FixPermissions()
 	if err != nil {
 		return err
 	}
 
-	err = linux.Chown(storageDir, App)
-	if err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -288,11 +282,19 @@ func (i *Installer) AccessChange() error {
 }
 
 func (i *Installer) FixPermissions() error {
-	err := linux.Chown(i.dataDir, App)
+	storageDir, err := i.platformClient.InitStorage(App, App)
+	if err != nil {
+		return err
+	}
+	err = linux.Chown(i.dataDir, App)
 	if err != nil {
 		return err
 	}
 	err = linux.Chown(i.commonDir, App)
+	if err != nil {
+		return err
+	}
+	err = linux.Chown(storageDir, App)
 	if err != nil {
 		return err
 	}
