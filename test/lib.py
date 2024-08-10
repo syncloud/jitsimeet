@@ -1,7 +1,7 @@
 from selenium.webdriver.common.by import By
 
 
-def login(selenium, device_user, device_password):
+def meeting(selenium, device_user, device_password):
     selenium.find_by(By.ID, "enter_room_field").send_keys('test-meeting')
     selenium.click_by(By.XPATH, "//button[.='Start meeting']")
     selenium.screenshot('join')
