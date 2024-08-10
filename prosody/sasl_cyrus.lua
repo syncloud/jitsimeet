@@ -106,7 +106,7 @@ local function new(realm, service_name, app_name, host_fqdn)
 
     if cyrussasl.set_log_cb then
         local log_cb = function (message, priority)
-            log(priority, "cyrussasl: %s", message)
+            log("debug", "cyrussasl %s: %s", priority, message)
         end
         cyrussasl.set_log_cb(log_cb, "trace");
     end
