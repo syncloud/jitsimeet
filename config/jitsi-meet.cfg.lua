@@ -72,6 +72,11 @@ VirtualHost "{{ .Domain }}"
     av_moderation_component = "avmoderation.{{ .Domain }}"
     c2s_require_encryption = true
 
+VirtualHost "guest.{{ .Domain }}"
+    authentication = "anonymous"
+    c2s_require_encryption = false
+
+
 VirtualHost "{{ .AuthDomain }}"
     --ssl = {
     --    key = "/var/snap/platform/current/syncloud.key";

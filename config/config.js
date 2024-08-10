@@ -4,6 +4,7 @@ var config = {};
 config.hosts = {};
 
 config.hosts.domain = '{{ .Domain }}';
+config.hosts.anonymousdomain = 'guest.{{ .Domain }}'
 config.focusUserJid = 'focus@{{ .AuthDomain }}';
 
 config.hosts.muc = 'muc.{{ .Domain }}';
