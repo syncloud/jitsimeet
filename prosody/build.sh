@@ -17,11 +17,16 @@ sed -i "s#CFG_CONFIGDIR=.*;#CFG_CONFIGDIR='/var/snap/jitsimeet/current/config';#
 sed -i "s#CFG_PLUGINDIR=.*;#CFG_PLUGINDIR='/snap/jitsimeet/current/prosody/usr/lib/prosody/modules/';#g"  ${BUILD_DIR}/usr/bin/prosody
 sed -i "s#CFG_DATADIR=.*;#CFG_DATADIR='/var/snap/jitsimeet/current/data';#g"  ${BUILD_DIR}/usr/bin/prosody
 
+sed -i "s#CFG_SOURCEDIR=.*;#CFG_SOURCEDIR='/snap/jitsimeet/current/prosody/usr/lib/prosody';#g"  ${BUILD_DIR}/usr/bin/prosodyctl
+sed -i "s#CFG_CONFIGDIR=.*;#CFG_CONFIGDIR='/var/snap/jitsimeet/current/config';#g"  ${BUILD_DIR}/usr/bin/prosodyctl
+sed -i "s#CFG_PLUGINDIR=.*;#CFG_PLUGINDIR='/snap/jitsimeet/current/prosody/usr/lib/prosody/modules/';#g"  ${BUILD_DIR}/usr/bin/prosodyctl
+sed -i "s#CFG_DATADIR=.*;#CFG_DATADIR='/var/snap/jitsimeet/current/data';#g"  ${BUILD_DIR}/usr/bin/prosodyctl
+
 # debug sasl using set_log_cb
-cp $DIR/sasl_cyrus.lua ${BUILD_DIR}/prosody-plugins
+#cp $DIR/sasl_cyrus.lua ${BUILD_DIR}/prosody-plugins
 
 # debug plugin load
-cp $DIR/pluginloader.lua ${BUILD_DIR}/usr/share/lua/5.4/prosody/util/pluginloader.lua
+#cp $DIR/pluginloader.lua ${BUILD_DIR}/usr/share/lua/5.4/prosody/util/pluginloader.lua
 
 apt update
 apt install -y build-essential

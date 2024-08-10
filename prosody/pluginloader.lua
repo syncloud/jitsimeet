@@ -13,6 +13,7 @@ local plugin_dir = {};
 for path in (CFG_PLUGINDIR or "./plugins/"):gsub("[/\\]", dir_sep):gmatch("[^"..path_sep.."]+") do
 	path = path..dir_sep; -- add path separator to path end
 	path = path:gsub(dir_sep..dir_sep.."+", dir_sep); -- coalesce multiple separators
+	log("info", "module search path: %s", path);
 	plugin_dir[#plugin_dir + 1] = path;
 end
 
