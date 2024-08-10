@@ -6,11 +6,14 @@ LIBS="$USR_LIBS:$(echo ${DIR}/lib/*-linux-gnu*)"
 #export LD_LIBRARY_PATH=$LIBS
 
 LUA="5.4"
-export LUA_PATH="$DIR/usr/share/lua/$LUA/?.lua"
-export LUA_PATH="$LUA_PATH;$DIR/usr/local/share/lua/$LUA/?.lua"
+LUA_PATH="$DIR/usr/share/lua/$LUA/?.lua"
+LUA_PATH="$LUA_PATH;$DIR/usr/local/share/lua/$LUA/?.lua"
 export LUA_PATH="$LUA_PATH;$DIR/usr/lib/prosody/modules/?.lua"
+
 #LIBS=$(echo $SNAP/prosody/usr/lib/*-linux-gnu*)
-export LUA_CPATH="$USR_LIBS/lua/$LUA/?.so"
+LUA_CPATH="$USR_LIBS/lua/$LUA/?.so"
 export LUA_CPATH="$LUA_CPATH;$DIR/usr/local/lib/lua/$LUA/?.so"
+
+export PROSODY_PLUGINDIR=$DIR/usr/lib/prosody/modules
 
 ${DIR}/lib/*-linux*/ld-*.so.* --library-path $LIBS ${DIR}/usr/bin/lua$LUA "$@"
