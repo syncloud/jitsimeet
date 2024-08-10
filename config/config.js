@@ -6,7 +6,7 @@ config.hosts = {};
 config.hosts.domain = '{{ .Domain }}';
 config.focusUserJid = 'focus@{{ .AuthDomain }}';
 
-config.hosts.muc = 'muc.meet.jitsi';
+config.hosts.muc = 'muc.{{ .Domain }}';
 config.bosh = 'https://{{ .Domain }}/http-bind';
 config.websocket = 'wss://{{ .Domain }}/xmpp-websocket';
 config.bridgeChannel = {
