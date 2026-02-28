@@ -28,8 +28,9 @@ sed -i "s#CFG_DATADIR=.*;#CFG_DATADIR='/var/snap/jitsimeet/current/data';#g"  ${
 # debug plugin load
 #cp $DIR/pluginloader.lua ${BUILD_DIR}/usr/share/lua/5.4/prosody/util/pluginloader.lua
 
+rm -f /etc/apt/sources.list.d/prosody.list /etc/apt/sources.list.d/jitsi-stable.list
 apt update
-apt install -y build-essential
+apt install -y build-essential wget
 wget https://github.com/cyrusimap/cyrus-sasl/releases/download/cyrus-sasl-2.1.28/cyrus-sasl-2.1.28.tar.gz
 tar xf cyrus-sasl-2.1.28.tar.gz
 cd cyrus-sasl-2.1.28
