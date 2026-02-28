@@ -8,7 +8,7 @@ def meeting(selenium, device_user, device_password):
     selenium.find_by(By.ID, "premeeting-name-input").send_keys('test-user')
     selenium.screenshot('premeeting')
     selenium.click_by(By.XPATH, "//div[@aria-label='Join meeting']")
-    selenium.find_by(By.XPATH, "//h1[.='Waiting for a moderator...']")
+    selenium.find_by(By.XPATH, "//h1[contains(.,'Waiting for a moderator')]")
     selenium.screenshot('waiting')
     selenium.click_by(By.XPATH, "//button[.='Log-in']")
     selenium.screenshot('login')
