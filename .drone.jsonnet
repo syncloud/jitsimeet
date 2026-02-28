@@ -1,5 +1,5 @@
 local name = "jitsimeet";
-local version = "stable-9584-1";
+local version = "stable-10741";
 local nginx = '1.24.0';
 local browser = "firefox";
 local python = '3.12-slim-bookworm';
