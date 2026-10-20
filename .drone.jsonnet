@@ -1,17 +1,19 @@
 local name = "jitsimeet";
-local version = "stable-10741";
+local version = "stable-11248";
+local image_repo = "ghcr.io/jitsi";
 local nginx = '1.24.0';
-local browser = "firefox";
 local python = '3.12-slim-bookworm';
 local debian = 'bookworm-slim';
-local platform = '25.09';
-local platform_buster = '25.02';
-local selenium = '4.35.0-20250828';
+local platform = '26.07.01';
+local go = '1.24.0';
+local playwright = 'v1.48.2-jammy';
 local store_publisher = "stable-346";
 local distro_default = "bookworm";
 local distros = ["bookworm", "buster"];
 
-local build(arch, test_ui, dind) = [{
+local platform_image(distro) = 'syncloud/platform-' + distro + ':' + platform;
+
+local build(arch, test_ui) = [{
     kind: "pipeline",
     type: "docker",
     name: arch,
@@ -20,28 +22,22 @@ local build(arch, test_ui, dind) = [{
         arch: arch
     },
     steps: [
-        {
-            name: "version",
-            image: "debian:" + debian,
-            commands: [
-                "echo $DRONE_BUILD_NUMBER > version"
-            ]
-        },
       {
          name: "jvb",
-         image: "jitsi/jvb:" + version,
+         image: image_repo + "/jvb:" + version,
+         user: "root",
          commands: [
              "./jvb/build.sh " + version
          ]
      },
      {
        name: 'jvb test',
-       image: 'syncloud/platform-' + distro_default + '-' + arch + ':' + platform,
+       image: platform_image(distro_default),
        commands: [
          './jvb/test.sh',
        ],
      },
- {
+     {
       name: 'nginx',
       image: 'nginx:' + nginx,
       commands: [
@@ -50,64 +46,61 @@ local build(arch, test_ui, dind) = [{
     },
     {
       name: 'nginx test',
-      image: 'syncloud/platform-' + distro_default + '-' + arch + ':' + platform,
+      image: platform_image(distro_default),
       commands: [
         './nginx/test.sh',
       ],
     },
      {
         name: "web",
-        image: "jitsi/web:" + version,
+        image: image_repo + "/web:" + version,
+        user: "root",
         commands: [
             "./web/build.sh " + version
         ]
     },
      {
         name: "prosody",
-        image: "jitsi/prosody:" + version,
+        image: image_repo + "/prosody:" + version,
+        user: "root",
         commands: [
             "./prosody/build.sh " + version
         ]
     },
     {
       name: 'prosody test',
-      image: 'syncloud/platform-' + distro_default + '-' + arch + ':' + platform,
+      image: platform_image(distro_default),
       commands: [
         './prosody/test.sh',
       ],
     },
      {
         name: "jicofo",
-        image: "jitsi/jicofo:" + version,
+        image: image_repo + "/jicofo:" + version,
+        user: "root",
         commands: [
             "./jicofo/build.sh " + version
         ]
     },
     {
       name: 'jicofo test',
-      image: 'syncloud/platform-' + distro_default + '-' + arch + ':' + platform,
+      image: platform_image(distro_default),
       commands: [
         './jicofo/test.sh',
       ],
     },
         {
             name: "cli",
-            image: "golang:1.24.0",
+            image: "golang:" + go,
             commands: [
-                "cd cli",
-                "CGO_ENABLED=0 go build -buildvcs=false -o ../build/snap/meta/hooks/install ./cmd/install",
-                "CGO_ENABLED=0 go build -buildvcs=false -o ../build/snap/meta/hooks/configure ./cmd/configure",
-                "CGO_ENABLED=0 go build -buildvcs=false -o ../build/snap/meta/hooks/pre-refresh ./cmd/pre-refresh",
-                "CGO_ENABLED=0 go build -buildvcs=false -o ../build/snap/meta/hooks/post-refresh ./cmd/post-refresh",
-                "CGO_ENABLED=0 go build -buildvcs=false -o ../build/snap/bin/cli ./cmd/cli",
+                "./cli/build.sh"
             ]
         },
         {
             name: "package",
             image: "debian:" + debian,
             commands: [
-                "VERSION=$(cat version)",
-                "./package.sh " + name + " $VERSION "
+                "./package.sh " + name + " $DRONE_BUILD_NUMBER"
             ]
         }
        ] + [
@@ -115,80 +108,26 @@ local build(arch, test_ui, dind) = [{
              name: 'test ' + distro,
              image: 'python:' + python,
              commands: [
-               'cd test',
-               './deps.sh',
-               'py.test -x -s test.py --distro=' + distro + ' --ver=$DRONE_BUILD_NUMBER --app=' + name,
+               './ci/test.sh test.py ' + distro + ' ' + name,
              ],
            }
            for distro in distros
 ] +
         ( if test_ui then [
          {
-            name: "selenium",
-            image: "selenium/standalone-" + browser + ":" + selenium,
-            detach: true,
-            environment: {
-                SE_NODE_SESSION_TIMEOUT: "999999",
-                START_XVFB: "true"
-            },
-               volumes: [{
-                name: "shm",
-                path: "/dev/shm"
-            }],
+            name: "e2e",
+            image: "mcr.microsoft.com/playwright:" + playwright,
             commands: [
-                "cat /etc/hosts",
-                "getent hosts " + name + ".buster.com | sed 's/" + name +".buster.com/auth.buster.com/g' | sudo tee -a /etc/hosts",
-                "cat /etc/hosts",
-                "/opt/bin/entry_point.sh"
+                "./test/e2e/run.sh e2e specs/01-jitsimeet.spec.ts " + distro_default,
             ]
          },
-        {
-            name: "selenium-video",
-            image: "selenium/video:ffmpeg-6.1.1-20240621",
-            detach: true,
-            environment: {
-                DISPLAY_CONTAINER_NAME: "selenium",
-                FILE_NAME: "video.mkv"
-            },
-            volumes: [
-                {
-                    name: "shm",
-                    path: "/dev/shm"
-                },
-               {
-                    name: "videos",
-                    path: "/videos"
-                }
-            ]
-        },
-        {
-            name: "test-ui",
-            image: "python:" + python,
-            commands: [
-              "cd test",
-              "./deps.sh",
-              "pip install -r requirements.txt",
-              'py.test -x -s ui.py --distro=' + distro_default + ' --ver=$DRONE_BUILD_NUMBER --app=' + name + ' --browser=' + browser,
-            ],
-            volumes: [{
-                name: "videos",
-                path: "/videos"
-            }]
-        },
         {
             name: "test-upgrade",
             image: "python:" + python,
             commands: [
-              "cd test",
-              "./deps.sh",
-              'py.test -x -s upgrade.py --distro=' + distro_default + ' --ver=$DRONE_BUILD_NUMBER --app=' + name + ' --browser=' + browser,
-            ],
-            privileged: true,
-            volumes: [{
-                name: "videos",
-                path: "/videos"
-            }]
-        }
+              "./ci/test.sh upgrade.py " + distro_default + " " + name,
+            ]
+         }
       ] else [] ) + [
         {
             name: "publish",
@@ -220,13 +159,7 @@ local build(arch, test_ui, dind) = [{
                     "artifact/*"
                 ],
                 privileged: true,
-                strip_components: 1,
-                volumes: [
-                   {
-                        name: "videos",
-                        path: "/drone/src/artifact/videos"
-                    }
-                ]
+                strip_components: 1
             },
             when: {
               status: [ "failure", "success" ]
@@ -239,21 +172,9 @@ local build(arch, test_ui, dind) = [{
           ]
         },
         services: [
-        {
-            name: "docker",
-            image: "docker:" + dind,
-            privileged: true,
-            volumes: [
-                {
-                    name: "dockersock",
-                    path: "/var/run"
-                }
-            ]
-        }
-            ] + [
     {
       name: name + '.' + distro + '.com',
-      image: 'syncloud/platform-' + distro + '-' + arch + ':' + (if distro == 'buster' then platform_buster else platform),
+      image: platform_image(distro),
       privileged: true,
       volumes: [
         {
@@ -281,20 +202,8 @@ local build(arch, test_ui, dind) = [{
                     path: "/dev"
                 }
             },
-            {
-                name: "shm",
-                temp: {}
-            },
-            {
-                name: "videos",
-                temp: {}
-            },
-            {
-                name: "dockersock",
-                temp: {}
-            },
      ]
     }];
 
-build("amd64", true, "20.10.21-dind") +
-build("arm64", false, "20.10.21-dind")
+build("amd64", true) +
+build("arm64", false)

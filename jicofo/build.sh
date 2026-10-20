@@ -8,7 +8,7 @@ cp -r /bin ${BUILD_DIR}
 cp -r /usr ${BUILD_DIR}
 cp -r /lib ${BUILD_DIR}
 
-JAVA_DIR=$(echo /usr/lib/jvm/java-17-openjdk-*)
+JAVA_DIR=$(echo /usr/lib/jvm/java-21-openjdk-*)
 rm -rf $BUILD_DIR/$JAVA_DIR/conf
 cp -r --dereference $JAVA_DIR/conf $BUILD_DIR/$JAVA_DIR
 rm -rf $BUILD_DIR/$JAVA_DIR/lib
