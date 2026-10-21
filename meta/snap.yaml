@@ -3,50 +3,40 @@ apps:
     user: jitsimeet
     command: bin/service.nginx.sh
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
+    restart-delay: 10s
     start-timeout: 600s
 
   prosody:
     user: jitsimeet
     command: bin/service.prosody.sh
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
+    restart-delay: 10s
     start-timeout: 600s
 
   saslauthd:
     user: jitsimeet
     command: bin/service.saslauthd.sh
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
+    restart-delay: 10s
     start-timeout: 600s
 
   jicofo:
     user: jitsimeet
     command: bin/service.jicofo.sh
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
+    restart-delay: 10s
     start-timeout: 600s
 
   jvb:
     user: jitsimeet
     command: bin/service.jvb.sh
     daemon: simple
-    plugs:
-    - network
-    - network-bind
     restart-condition: always
+    restart-delay: 10s
     start-timeout: 600s
 
   cli:
@@ -67,7 +57,6 @@ apps:
   restore-post-start:
     command: bin/cli restore-post-start
 
-confinement: strict
 description: Secure and high quality meetings
 grade: stable
 name: jitsimeet

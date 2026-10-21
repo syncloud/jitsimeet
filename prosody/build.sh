@@ -37,6 +37,7 @@ cd cyrus-sasl-2.1.28
 
 PREFIX=/snap/jitsimeet/current/prosody/sasl2
 ./configure \
+  CFLAGS="-Wno-error=implicit-function-declaration -Wno-error=implicit-int" \
   --prefix=$PREFIX \
   --with-saslauthd=/var/snap/jitsimeet/current/saslauthd \
   --enable-plain \
